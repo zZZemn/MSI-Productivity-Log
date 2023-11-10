@@ -35,5 +35,10 @@ if (isset($_POST['submitType'])) {
         $id = $_POST['id'];
         $newStatus = $_POST['newStatus'];
         echo $db->changeUserStatus($id, $newStatus);
+    } elseif ($_POST['submitType'] === 'SelectShift') {
+        session_start();
+        $id = $_SESSION['id'];
+        $shift = $_POST['shift'];
+        echo $db->selectShift($id, $shift);
     }
 }
