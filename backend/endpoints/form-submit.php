@@ -40,5 +40,12 @@ if (isset($_POST['submitType'])) {
         $id = $_SESSION['id'];
         $shift = $_POST['shift'];
         echo $db->selectShift($id, $shift);
+    } elseif ($_POST['submitType'] === 'AddNewEntry') {
+        session_start();
+        $id = $_SESSION['id'];
+        echo $db->addNewEntry($id, $_POST);
+    } elseif ($_POST['submitType'] === 'StopEntry') {
+        $id = $_POST['id'];
+        echo $db->stopEntry($id);
     }
 }

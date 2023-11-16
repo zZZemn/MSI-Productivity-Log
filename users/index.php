@@ -7,7 +7,7 @@ include("components/header.php");
 </div>
 
 <!-- table -->
-<div class="container mt-3">
+<div class="container mt-3 table-container mb-5">
     <table id="dataTable" class="table table-striped table-bordered" style="width:100%">
         <thead>
             <tr>
@@ -22,17 +22,31 @@ include("components/header.php");
                 <th>Stop Time</th>
                 <th>Duration</th>
                 <th>Weight Duration</th>
+                <th>Time Value Weighted Time</th>
                 <th>Utilization %</th>
+                <th>Action</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="tbody">
             <?php
             $sql = $db->getMyReports($user['ID']);
             $count = 1;
             while ($row = $sql->fetch_array()) {
                 $start_time = DateTime::createFromFormat('H:i:s', $row['TIME_START']);
                 $stop_time = DateTime::createFromFormat('H:i:s', $row['TIME_STOP']);
+
                 $duration = $start_time->diff($stop_time);
+
+
+                // TIME VALUE
+                $totalSeconds = $duration->s + $duration->i * 60 + $duration->h * 3600;
+                $totalSeconds = $duration->s + $duration->i * 60 + $duration->h * 3600;
+                $decimalFractionOfDay = $totalSeconds / (24 * 3600);
+                $timeValue = number_format($decimalFractionOfDay, 5);
+
+                // UTILIZATION
+                $utilizationResult = $timeValue / 7.5;
+                $utilization = number_format($utilizationResult, 2);
             ?>
                 <tr>
 
@@ -43,11 +57,15 @@ include("components/header.php");
                     <td><?= $row['SUB_CATEGORY'] ?></td>
                     <td><?= $row['REPORT_STATUS'] ?></td>
                     <td><?= $row['REMARKS'] ?></td>
-                    <td><?= $row['TIME_START'] ?></td>
-                    <td><?= $row['TIME_STOP'] ?></td>
-                    <td><?= $duration->format('%H:%I:%S') ?></td>
-                    <td>Weight Duration</td>
-                    <td>Utilization %</td>
+                    <td><?= $start_time->format('h:i a') ?></td>
+                    <td><?= ($row['TIME_STOP'] > 1) ? $stop_time->format('h:i a') : '' ?></td>
+                    <td><?= ($row['TIME_STOP'] > 1) ? $duration->format('%H:%I:%S') : '' ?></td>
+                    <td><?= ($row['TIME_STOP'] > 1) ? $duration->format('%H:%I:%S') : '' ?></td>
+                    <td><?= ($row['TIME_STOP'] > 1 && $row['ACTIVITY'] != 'OTHER ACTIVITIES') ? $timeValue : '0.00' ?></td>
+                    <td><?= ($row['TIME_STOP'] > 1 && $row['ACTIVITY'] != 'OTHER ACTIVITIES') ? $utilization : '0.00' ?></td>
+                    <td>
+                        <?= ($row['TIME_STOP'] < 1) ? "<button class='btnStopDuration btn btn-danger' data-id='" . $row['ID'] . "'>Stop</button>" : '' ?>
+                    </td>
                 </tr>
             <?php
                 $count++;
@@ -67,7 +85,9 @@ include("components/header.php");
                 <th>Stop Time</th>
                 <th>Duration</th>
                 <th>Weight Duration</th>
+                <th>Time Value Weighted Time</th>
                 <th>Utilization %</th>
+                <th>Action</th>
             </tr>
         </tfoot>
     </table>
@@ -336,6 +356,8 @@ include("components/header.php");
     </div>
 </div>
 <!-- End of New Entry Modal -->
+
+<button id="scrollToTop" class="btn btn-dark"><i class="fa-solid fa-arrow-right fa-rotate-270"></i></button>
 
 <?php
 include("components/footer.php");

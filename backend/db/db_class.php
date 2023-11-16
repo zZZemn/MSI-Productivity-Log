@@ -67,7 +67,6 @@ class global_class extends db_connect
     public function selectShift($id, $shift)
     {
         $sql = $this->login($id);
-        // var_dump($sql);
         if ($sql->num_rows > 0) {
             $user = $sql->fetch_array();
             $team = $user['TEAM_ID'];
@@ -91,6 +90,42 @@ class global_class extends db_connect
         if ($query->execute()) {
             $result = $query->get_result();
             return $result;
+        }
+    }
+
+    public function addNewEntry($id, $post)
+    {
+        $sql = $this->login($id);
+        if ($sql->num_rows > 0) {
+            $team = $post['team'];
+            $activity = $post['activity'];
+            $category = $post['category'];
+            $subCategory = $post['subCategory'];
+            $date = date('Y-m-d');
+            $time = date('H:i:s');
+
+            $shift = 'To Add';
+
+            $query = $this->conn->prepare("INSERT INTO `tblreport` (`USER_ID`, `TEAM`, `SHIFT`, `START_DATE`, `TASK_TYPE`, `ACTIVITY`, `CATEGORY`, `SUB_CATEGORY`, `REPORT_STATUS`, `VOLUME`, `TIME_START`, `TIME_STOP`) VALUES 
+                                                                   ('$id','$team','$shift','$date','SINGLE','$activity','$category','$subCategory','Pending','','$time','')");
+            if ($query->execute()) {
+                return 200;
+            } else {
+                return 400;
+            }
+        } else {
+            return 200;
+        }
+    }
+
+    public function stopEntry($id)
+    {
+        $time = date('H:i:s');
+        $query = $this->conn->prepare("UPDATE `tblreport` SET `REPORT_STATUS`='Submitted' ,`TIME_STOP`='$time' WHERE `ID` = '$id'");
+        if ($query->execute()) {
+            return 200;
+        } else {
+            return 400;
         }
     }
 }

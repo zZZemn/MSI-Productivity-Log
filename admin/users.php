@@ -1,16 +1,5 @@
 <?php
 include('components/header.php');
-session_start();
-if (isset($_SESSION['id'])) {
-    $sql = $db->login($_SESSION['id']);
-    if ($sql->num_rows > 0) {
-        $user = $sql->fetch_array();
-    } else {
-        header('Location: ../index.php');
-    }
-} else {
-    header('Location: ../index.php');
-}
 ?>
 
 <div class="d-flex justify-content-between">

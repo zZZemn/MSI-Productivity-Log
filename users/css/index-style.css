@@ -1,0 +1,9 @@
+.table-container {
+  overflow-x: scroll;
+}
+
+#scrollToTop {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}

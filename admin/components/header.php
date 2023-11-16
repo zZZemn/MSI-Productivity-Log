@@ -1,7 +1,6 @@
 <?php
 include('../backend/db/db_class.php');
 $db = new global_class();
-
 session_start();
 if (isset($_SESSION['id'])) {
     $sql = $db->login($_SESSION['id']);

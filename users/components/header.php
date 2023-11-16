@@ -25,9 +25,14 @@ if (isset($_SESSION['id'])) {
     <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="../node_modules/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="../css/alert.css">
+    <link rel="stylesheet" href="css/index-style.css">
 </head>
 
 <body>
+    <div class="alert alert-danger">
+    </div>
+    <div class="alert alert-success">
+    </div>
     <main class="container">
         <ul class="nav nav-tabs m-3">
             <li class="nav-item">
