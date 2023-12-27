@@ -7,7 +7,7 @@ include('components/header.php');
     <button type="button" id="btnOpenFrmAddUser" class="btn btn-primary">Add User</button>
 </div>
 <!-- table -->
-<div class="container mt-3">
+<div class="container mt-3 table-container">
     <table id="dataTable" class="table table-striped table-bordered" style="width:100%">
         <thead>
             <tr>

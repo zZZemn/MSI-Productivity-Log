@@ -1,4 +1,19 @@
 $(document).ready(function () {
+  // scroll to top
+  $("#scrollToTop").fadeOut();
+  $(window).scroll(function () {
+    if ($(this).scrollTop() > 100) {
+      $("#scrollToTop").fadeIn();
+    } else {
+      $("#scrollToTop").fadeOut();
+    }
+  });
+
+  $("#scrollToTop").click(function () {
+    $("html, body").animate({ scrollTop: 0 }, 1);
+    return false;
+  });
+
   const alertFunction = (alertType, text) => {
     $("." + alertType)
       .css("opacity", "1")
@@ -124,4 +139,19 @@ $(document).ready(function () {
     });
   });
   //   end of change user status
+
+  // download reports in excel
+  $("#btnDownLoadFile").click(function (e) {
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: "process/download.php",
+      data: {
+        downloadExcelFile: "downloadExcelFile",
+      },
+      success: function (response) {
+        console.log(response);
+      },
+    });
+  });
 });

@@ -1,5 +1,6 @@
 .table-container {
   overflow-x: scroll;
+  font-size: 12px !important;
 }
 
 #scrollToTop {

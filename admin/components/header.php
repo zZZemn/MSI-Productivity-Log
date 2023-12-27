@@ -36,17 +36,17 @@ if (isset($_SESSION['id'])) {
     <main class="container">
         <ul class="nav nav-tabs m-3">
             <li class="nav-item">
-                <a class="nav-link nav-home" href="index.php">Home</a>
+                <a class="nav-link nav-home" href="index.php">Reports</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link nav-users" href="users.php">Users</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link nav-activity" href="#">Activity</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link nav-reports" href="#">Reports</a>
-            </li>
+            <!-- <li class="nav-item">
+                <a class="nav-link nav-activity" href="activity.php">Activity</a>
+            </li> -->
+            <!-- <li class="nav-item">
+                <a class="nav-link nav-reports" href="reports.php">Reports</a>
+            </li> -->
             <li class="nav-item">
                 <a class="nav-link nav-logout text-danger" href="../logout.php">Logout</a>
             </li>

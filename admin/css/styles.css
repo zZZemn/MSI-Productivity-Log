@@ -2,3 +2,15 @@
     font-size: 12px;
     margin: 2px;
 }
+
+
+.table-container {
+    overflow-x: auto;
+    font-size: 12px;
+}
+
+#scrollToTop {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+}
