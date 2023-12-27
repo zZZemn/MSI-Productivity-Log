@@ -12,6 +12,7 @@ include("components/header.php");
         <thead>
             <tr>
                 <th>#</th>
+                <th>MULTI ENTRY ID</th>
                 <th>Group</th>
                 <th>Activity</th>
                 <th>Category</th>
@@ -51,6 +52,7 @@ include("components/header.php");
                 <tr>
 
                     <td><?= $count ?></td>
+                    <td><?= $row['MULTI_TASK_ID'] ?></td>
                     <td><?= $row['TEAM'] ?></td>
                     <td><?= $row['ACTIVITY'] ?></td>
                     <td><?= $row['CATEGORY'] ?></td>
