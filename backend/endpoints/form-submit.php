@@ -14,7 +14,14 @@ if (isset($_POST['submitType'])) {
                 if ($user['USER_TYPE'] === 'admin') {
                     echo 'admin';
                 } else {
-                    echo 'user';
+                    $getLoginWithoutLogout = $db->getNotLoginWithoutLogout();
+                    if ($getLoginWithoutLogout->num_rows > 0) {
+                        $loginDetails = $getLoginWithoutLogout->fetch_array();
+                        $_SESSION['login_id'] = $loginDetails['LOGIN_ID'];
+                        echo 'No need to select shift';
+                    } else {
+                        echo 'user';
+                    }
                 }
             } else {
                 echo '400';

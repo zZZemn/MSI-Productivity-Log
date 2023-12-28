@@ -73,6 +73,23 @@ class global_class extends db_connect
         }
     }
 
+    public function getNotLoginWithoutLogout()
+    {
+        $query = $this->conn->prepare("SELECT *
+                                       FROM `tblreport` AS login
+                                       WHERE `SUB_CATEGORY` = 'LOG IN'
+                                       AND NOT EXISTS (
+                                           SELECT 1
+                                           FROM `tblreport` AS logout
+                                           WHERE login.LOGIN_ID = logout.LOGIN_ID
+                                           AND logout.SUB_CATEGORY = 'LOG OUT'
+                                       );");
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
     public function selectShift($id, $shift)
     {
         $sql = $this->login($id);
@@ -204,7 +221,7 @@ class global_class extends db_connect
         $loginDetails = $getLoginDetails->fetch_array();
         $shift = $loginDetails['SHIFT'];
 
-        $query = $this->conn->prepare("INSERT INTO `tblreport` (`LOGIN_ID`,`USER_ID`,`TEAM`, `SHIFT`, `START_DATE`, `TASK_TYPE`, `ACTIVITY`, `CATEGORY`, `SUB_CATEGORY`, `REPORT_STATUS`, `VOLUME`, `TIME_START`, `TIME_STOP`) VALUES ('$loginId','$userId','$team','$shift','$date','SINGLE','OTHER ACTIVITIES','ATTENDANCE','LOG IN','SUBMITTED ON TIME','','$time','')");
+        $query = $this->conn->prepare("INSERT INTO `tblreport` (`LOGIN_ID`,`USER_ID`,`TEAM`, `SHIFT`, `START_DATE`, `TASK_TYPE`, `ACTIVITY`, `CATEGORY`, `SUB_CATEGORY`, `REPORT_STATUS`, `VOLUME`, `TIME_START`, `TIME_STOP`) VALUES ('$loginId','$userId','$team','$shift','$date','SINGLE','OTHER ACTIVITIES','ATTENDANCE','LOG OUT','SUBMITTED ON TIME','','$time','')");
 
         if ($query->execute()) {
             return $user;

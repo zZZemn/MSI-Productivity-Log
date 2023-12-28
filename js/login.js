@@ -15,10 +15,13 @@ $(document).ready(function () {
         userId: userId,
       },
       success: function (response) {
+        console.log(response);
         if (response == "admin") {
           window.location.href = "admin/index.php";
         } else if (response == "user") {
           $("#selectShiftModal").modal("show");
+        } else if (response == "No need to select shift") {
+          window.location.href = "users/index.php";
         } else {
           $(".alert-danger").css("opacity", "1").text("Login Failed!");
           setTimeout(function () {
