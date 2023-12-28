@@ -131,14 +131,14 @@ class global_class extends db_connect
         }
     }
 
-    public function checkIfThereIsPendingEntry($userId)
-    {
-        $query = $this->conn->prepare("SELECT * FROM `tblreport` WHERE `REPORT_STATUS` = 'Pending' AND `USER_ID` = '$userId'");
-        if ($query->execute()) {
-            $result = $query->get_result();
-            return $result;
-        }
-    }
+    // public function checkIfThereIsPendingEntry($userId)
+    // {
+    //     $query = $this->conn->prepare("SELECT * FROM `tblreport` WHERE `REPORT_STATUS` = 'Pending' AND `USER_ID` = '$userId'");
+    //     if ($query->execute()) {
+    //         $result = $query->get_result();
+    //         return $result;
+    //     }
+    // }
 
     public function checkMultiTaskId($id)
     {
@@ -149,23 +149,23 @@ class global_class extends db_connect
         }
     }
 
-    public function addNewEntry($id, $post)
+    public function addNewEntry($id, $loginId, $post)
     {
 
         $sql = $this->login($id);
         if ($sql->num_rows > 0) {
-            $checkPendingEntry = $this->checkIfThereIsPendingEntry($id);
-            if ($checkPendingEntry->num_rows > 0) {
-                $pengingEntry = $checkPendingEntry->fetch_array();
-                $multiTaskId = $pengingEntry['MULTI_TASK_ID'];
-            } else {
-                $multiTaskId = 'MULTI_' . rand(000000, 999999);
-                $checkMultiTaskId = $this->checkMultiTaskId($multiTaskId);
-                while ($checkMultiTaskId->num_rows > 0) {
-                    $multiTaskId = 'MULTI_' . rand(000000, 999999);
-                    $checkMultiTaskId = $this->checkMultiTaskId($multiTaskId);
-                }
-            }
+            // $checkPendingEntry = $this->checkIfThereIsPendingEntry($id);
+            // if ($checkPendingEntry->num_rows > 0) {
+            //     $pengingEntry = $checkPendingEntry->fetch_array();
+            //     $multiTaskId = $pengingEntry['MULTI_TASK_ID'];
+            // } else {
+            //     $multiTaskId = 'MULTI_' . rand(000000, 999999);
+            //     $checkMultiTaskId = $this->checkMultiTaskId($multiTaskId);
+            //     while ($checkMultiTaskId->num_rows > 0) {
+            //         $multiTaskId = 'MULTI_' . rand(000000, 999999);
+            //         $checkMultiTaskId = $this->checkMultiTaskId($multiTaskId);
+            //     }
+            // }
 
             $team = $post['team'];
             $activity = $post['activity'];
@@ -176,8 +176,8 @@ class global_class extends db_connect
 
             $shift = 'To Add';
 
-            $query = $this->conn->prepare("INSERT INTO `tblreport` (`USER_ID`,`MULTI_TASK_ID`,`TEAM`, `SHIFT`, `START_DATE`, `TASK_TYPE`, `ACTIVITY`, `CATEGORY`, `SUB_CATEGORY`, `REPORT_STATUS`, `VOLUME`, `TIME_START`, `TIME_STOP`) VALUES 
-                                                                   ('$id','$multiTaskId','$team','$shift','$date','SINGLE','$activity','$category','$subCategory','Pending','','$time','')");
+            $query = $this->conn->prepare("INSERT INTO `tblreport` (`USER_ID`,`LOGIN_ID`,`TEAM`, `SHIFT`, `START_DATE`, `TASK_TYPE`, `ACTIVITY`, `CATEGORY`, `SUB_CATEGORY`, `REPORT_STATUS`, `VOLUME`, `TIME_START`, `TIME_STOP`) VALUES 
+                                                                   ('$id','$loginId','$team','$shift','$date','SINGLE','$activity','$category','$subCategory','Pending','','$time','')");
             if ($query->execute()) {
                 return 200;
             } else {
@@ -221,7 +221,7 @@ class global_class extends db_connect
         $loginDetails = $getLoginDetails->fetch_array();
         $shift = $loginDetails['SHIFT'];
 
-        $query = $this->conn->prepare("INSERT INTO `tblreport` (`LOGIN_ID`,`USER_ID`,`TEAM`, `SHIFT`, `START_DATE`, `TASK_TYPE`, `ACTIVITY`, `CATEGORY`, `SUB_CATEGORY`, `REPORT_STATUS`, `VOLUME`, `TIME_START`, `TIME_STOP`) VALUES ('$loginId','$userId','$team','$shift','$date','SINGLE','OTHER ACTIVITIES','ATTENDANCE','LOG OUT','SUBMITTED ON TIME','','$time','')");
+        $query = $this->conn->prepare("INSERT INTO `tblreport` (`LOGIN_ID`,`USER_ID`,`TEAM`, `SHIFT`, `START_DATE`, `TASK_TYPE`, `ACTIVITY`, `CATEGORY`, `SUB_CATEGORY`, `REPORT_STATUS`, `VOLUME`, `TIME_START`, `TIME_STOP`) VALUES ('$loginId','$userId','$team','$shift','$date','SINGLE','OTHER ACTIVITIES','ATTENDANCE','LOG OUT','SUBMITTED ON TIME','','$time','$time')");
 
         if ($query->execute()) {
             return $user;

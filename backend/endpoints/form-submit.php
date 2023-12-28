@@ -50,7 +50,8 @@ if (isset($_POST['submitType'])) {
     } elseif ($_POST['submitType'] === 'AddNewEntry') {
         session_start();
         $id = $_SESSION['id'];
-        echo $db->addNewEntry($id, $_POST);
+        $loginId = $_SESSION['login_id'];
+        echo $db->addNewEntry($id, $loginId, $_POST);
     } elseif ($_POST['submitType'] === 'StopEntry') {
         $id = $_POST['id'];
         echo $db->stopEntry($id);
