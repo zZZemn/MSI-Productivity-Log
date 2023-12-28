@@ -64,6 +64,15 @@ class global_class extends db_connect
         }
     }
 
+    public function checkLoginId($id)
+    {
+        $query = $this->conn->prepare("SELECT * FROM `tblreport` WHERE `LOGIN_ID` = '$id'");
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
     public function selectShift($id, $shift)
     {
         $sql = $this->login($id);
@@ -72,9 +81,17 @@ class global_class extends db_connect
             $team = $user['TEAM_ID'];
             $date = date('Y-m-d');
             $time = date('H:i:s');
-            $query = $this->conn->prepare("INSERT INTO `tblreport` (`USER_ID`, `TEAM`, `SHIFT`, `START_DATE`, `TASK_TYPE`, `ACTIVITY`, `CATEGORY`, `SUB_CATEGORY`, `REPORT_STATUS`, `VOLUME`, `TIME_START`, `TIME_STOP`) VALUES 
-                                                                   ('$id','$team','$shift','$date','SINGLE','OTHER ACTIVITIES','ATTENDANCE','LOG IN','SUBMITTED ON TIME','1.0','$time','$time')");
+
+            $loginId = 'LOGIN_' . rand(00000, 99999);
+            while ($this->checkLoginId($loginId)->num_rows > 0) {
+                $loginId = 'LOGIN_' . rand(00000, 99999);
+            }
+
+
+            $query = $this->conn->prepare("INSERT INTO `tblreport` (`USER_ID`, `LOGIN_ID`,`TEAM`, `SHIFT`, `START_DATE`, `TASK_TYPE`, `ACTIVITY`, `CATEGORY`, `SUB_CATEGORY`, `REPORT_STATUS`, `VOLUME`, `TIME_START`, `TIME_STOP`) VALUES 
+                                                                   ('$id','$loginId','$team','$shift','$date','SINGLE','OTHER ACTIVITIES','ATTENDANCE','LOG IN','SUBMITTED ON TIME','1.0','$time','$time')");
             if ($query->execute()) {
+                $_SESSION['login_id'] = $loginId;
                 return 200;
             } else {
                 return 400;
@@ -160,6 +177,37 @@ class global_class extends db_connect
         $query = $this->conn->prepare("UPDATE `tblreport` SET `REPORT_STATUS`='Submitted' ,`TIME_STOP`='$time' WHERE `ID` = '$id'");
         if ($query->execute()) {
             return 200;
+        } else {
+            return 400;
+        }
+    }
+
+    public function getLoginDetails($id)
+    {
+        $query = $this->conn->prepare("SELECT * FROM `tblreport` WHERE `LOGIN_ID` = '$id' AND `SUB_CATEGORY` = 'LOG IN'");
+        if ($query->execute()) {
+            $result = $query->get_result();
+            return $result;
+        }
+    }
+
+    public function logout($userId, $loginId)
+    {
+        $date = date('Y-m-d');
+        $time = date('H:i:s');
+
+        $getUser = $this->login($userId);
+        $user = $getUser->fetch_array();
+
+        $team = $user['TEAM_ID'];
+        $getLoginDetails = $this->getLoginDetails($loginId);
+        $loginDetails = $getLoginDetails->fetch_array();
+        $shift = $loginDetails['SHIFT'];
+
+        $query = $this->conn->prepare("INSERT INTO `tblreport` (`LOGIN_ID`,`USER_ID`,`TEAM`, `SHIFT`, `START_DATE`, `TASK_TYPE`, `ACTIVITY`, `CATEGORY`, `SUB_CATEGORY`, `REPORT_STATUS`, `VOLUME`, `TIME_START`, `TIME_STOP`) VALUES ('$loginId','$userId','$team','$shift','$date','SINGLE','OTHER ACTIVITIES','ATTENDANCE','LOG IN','SUBMITTED ON TIME','','$time','')");
+
+        if ($query->execute()) {
+            return $user;
         } else {
             return 400;
         }

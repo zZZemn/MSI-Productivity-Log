@@ -12,7 +12,7 @@ include("components/header.php");
         <thead>
             <tr>
                 <th>#</th>
-                <th>MULTI ENTRY ID</th>
+                <th>LOGIN ID</th>
                 <th>Group</th>
                 <th>Activity</th>
                 <th>Category</th>
@@ -28,6 +28,7 @@ include("components/header.php");
                 <th>Action</th>
             </tr>
         </thead>
+        <?= $_SESSION['login_id'] ?>
         <tbody class="tbody">
             <?php
             $sql = $db->getMyReports($user['ID']);
@@ -52,7 +53,7 @@ include("components/header.php");
                 <tr>
 
                     <td><?= $count ?></td>
-                    <td><?= $row['MULTI_TASK_ID'] ?></td>
+                    <td><?= $row['LOGIN_ID'] ?></td>
                     <td><?= $row['TEAM'] ?></td>
                     <td><?= $row['ACTIVITY'] ?></td>
                     <td><?= $row['CATEGORY'] ?></td>
