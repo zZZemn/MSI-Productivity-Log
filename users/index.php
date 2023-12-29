@@ -12,7 +12,8 @@ include("components/header.php");
         <thead>
             <tr>
                 <th>#</th>
-                <th>LOGIN ID</th>
+                <th>Login ID</th>
+                <th>Multi Task ID</th>
                 <th>Group</th>
                 <th>Activity</th>
                 <th>Category</th>
@@ -22,6 +23,7 @@ include("components/header.php");
                 <th>Start Time</th>
                 <th>Stop Time</th>
                 <th>Duration</th>
+                <th>Percentage</th>
                 <th>Weight Duration</th>
                 <th>Time Value Weighted Time</th>
                 <th>Utilization %</th>
@@ -38,21 +40,98 @@ include("components/header.php");
 
                 $duration = $start_time->diff($stop_time);
 
+                $getMultiTask = $db->checkMultiTaskId($row['MULTI_TASK_ID']);
+                if ($getMultiTask->num_rows > 1) {
+                    $durationArray = [];
+                    while ($multiTaskDuration = $getMultiTask->fetch_array()) {
+                        $multiStart_time = DateTime::createFromFormat('H:i:s', $multiTaskDuration['TIME_START']);
+                        $multiStop_time = DateTime::createFromFormat('H:i:s', $multiTaskDuration['TIME_STOP']);
+                        $multiDuration = $multiStart_time->diff($multiStop_time);
 
-                // TIME VALUE
-                $totalSeconds = $duration->s + $duration->i * 60 + $duration->h * 3600;
-                $totalSeconds = $duration->s + $duration->i * 60 + $duration->h * 3600;
-                $decimalFractionOfDay = $totalSeconds / (24 * 3600);
-                $timeValue = number_format($decimalFractionOfDay, 5);
+                        $multiDurations = [
+                            "ID" => $multiTaskDuration['ID'],
+                            "Duration" => $multiDuration->format('%H:%I:%S'),
+                            "Start_Time" => $multiTaskDuration['TIME_START'],
+                            "Stop_Time" => $multiTaskDuration['TIME_STOP']
+                        ];
 
-                // UTILIZATION
-                $utilizationResult = $timeValue / 7.5;
-                $utilization = number_format($utilizationResult, 2);
+                        $durationArray[] = $multiDurations;
+                    }
+
+                    $durationInSeconds = array_map(function ($item) {
+                        list($hours, $minutes, $seconds) = sscanf($item['Duration'], "%d:%d:%d");
+                        return $hours * 3600 + $minutes * 60 + $seconds;
+                    }, $durationArray);
+
+                    $totalDuration = array_sum($durationInSeconds);
+
+                    foreach ($durationInSeconds as $index => $durations) {
+                        $percentage = ($durations / $totalDuration) * 100;
+                        $durationArray[$index]['Percentage'] = $percentage;
+                    }
+
+                    foreach ($durationArray as $durationKey) {
+                        if ($durationKey['ID'] == $row['ID']) {
+                            $matchingDuration = $durationKey['Percentage'];
+                            $percentage = number_format($durationKey['Percentage'], 2);
+                            break;
+                        }
+                    }
+
+                    echo json_encode($durationArray);
+                    // Weigth Duration
+                    $minStartTime = "24:00:00";
+                    $maxStopTime = "00:00:00";
+
+                    foreach ($durationArray as $durationKeyOne) {
+                        // Compare start times
+                        if (strtotime($durationKeyOne['Start_Time']) < strtotime($minStartTime)) {
+                            $minStartTime = $durationKeyOne['Start_Time'];
+                        }
+
+                        // Compare stop times
+                        if (strtotime($durationKeyOne['Stop_Time']) > strtotime($maxStopTime)) {
+                            $maxStopTime = $durationKeyOne['Stop_Time'];
+                        }
+                    }
+
+                    echo '<br>Start Min:  ' . $minStartTime;
+                    echo '<br>Stop Max:  ' . $maxStopTime;
+
+                    $percentageInDecimal = $percentage / 100;
+
+                    $minStartTimeStamp = strtotime($minStartTime);
+                    $maxStopTimeStamp = strtotime($maxStopTime);
+
+                    $totalDurationMinMax = $maxStopTimeStamp - $minStartTimeStamp;
+                    $totalDurationFormatted = gmdate("H:i:s", $totalDurationMinMax);
+                    echo '<br>Total: ' . $totalDurationFormatted;
+
+                    $weightDuration =  $percentageInDecimal * $totalDurationMinMax;
+                    $weightDurationFormatted = gmdate("H:i:s", $weightDuration);
+
+                    $timeValue = $weightDuration * 24;
+
+                    $utilizationResult = $timeValue / 7.5;
+                    $utilization = number_format($utilizationResult, 2);
+                } else {
+                    $percentage = 100;
+                    $percentageInDecimal = $percentage / 100;
+                    $durationInSeconds = $duration->s + $duration->i * 60 + $duration->h * 3600;
+                    $weightDuration = $percentageInDecimal * $durationInSeconds;
+                    $weightDurationFormatted = gmdate("H:i:s", $weightDuration);
+
+                    $timeValue = $weightDuration * 24;
+
+                    $utilizationResult = $timeValue / 7.5;
+                    $utilization = number_format($utilizationResult, 2);
+                }
             ?>
                 <tr>
 
                     <td><?= $count ?></td>
                     <td><?= $row['LOGIN_ID'] ?></td>
+                    <td><?= $row['MULTI_TASK_ID'] ?></td>
                     <td><?= $row['TEAM'] ?></td>
                     <td><?= $row['ACTIVITY'] ?></td>
                     <td><?= $row['CATEGORY'] ?></td>
@@ -62,9 +141,18 @@ include("components/header.php");
                     <td><?= $start_time->format('h:i a') ?></td>
                     <td><?= ($row['TIME_STOP'] > 1) ? $stop_time->format('h:i a') : '' ?></td>
                     <td><?= ($row['TIME_STOP'] > 1) ? $duration->format('%H:%I:%S') : '' ?></td>
-                    <td><?= ($row['TIME_STOP'] > 1) ? $duration->format('%H:%I:%S') : '' ?></td>
-                    <td><?= ($row['TIME_STOP'] > 1 && $row['ACTIVITY'] != 'OTHER ACTIVITIES') ? $timeValue : '0.00' ?></td>
-                    <td><?= ($row['TIME_STOP'] > 1 && $row['ACTIVITY'] != 'OTHER ACTIVITIES') ? $utilization : '0.00' ?></td>
+                    <td><?= ($row['TIME_STOP'] > 1) ? $percentage : '' ?></td>
+                    <td><?= ($row['TIME_STOP'] > 1) ? $weightDurationFormatted : '' ?></td>
+                    <td><?= ($row['TIME_STOP'] > 1 && $row['ACTIVITY'] != 'OTHER ACTIVITIES')
+                            ? $timeValue
+                            : '0.00'
+                        ?>
+                    </td>
+                    <td><?= ($row['TIME_STOP'] > 1 && $row['ACTIVITY'] != 'OTHER ACTIVITIES')
+                            ? $utilization
+                            : '0.00'
+                        ?>
+                    </td>
                     <td>
                         <?= ($row['TIME_STOP'] < 1) ? "<button class='btnStopDuration btn btn-danger' data-id='" . $row['ID'] . "'>Stop</button>" : '' ?>
                     </td>
@@ -77,6 +165,8 @@ include("components/header.php");
         <tfoot>
             <tr>
                 <th>#</th>
+                <th>Login ID</th>
+                <th>Multi Task ID</th>
                 <th>Group</th>
                 <th>Activity</th>
                 <th>Category</th>
@@ -86,6 +176,7 @@ include("components/header.php");
                 <th>Start Time</th>
                 <th>Stop Time</th>
                 <th>Duration</th>
+                <th>Percentage</th>
                 <th>Weight Duration</th>
                 <th>Time Value Weighted Time</th>
                 <th>Utilization %</th>
