@@ -121,7 +121,7 @@ class global_class extends db_connect
     public function getMyReports($id)
     {
         if ($id == '') {
-            $query = $this->conn->prepare("SELECT tr.*, tu.* FROM `tblreport` tr JOIN tblusers tu ON tr.USER_ID = tu.ID");
+            $query = $this->conn->prepare("SELECT tr.*, tu.FULL_NAME FROM `tblreport` tr JOIN tblusers tu ON tr.USER_ID = tu.ID");
         } else {
             $query = $this->conn->prepare("SELECT * FROM `tblreport` WHERE `USER_ID` = '$id'");
         }

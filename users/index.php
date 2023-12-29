@@ -41,7 +41,7 @@ include("components/header.php");
                 $duration = $start_time->diff($stop_time);
 
                 $getMultiTask = $db->checkMultiTaskId($row['MULTI_TASK_ID']);
-                if ($getMultiTask->num_rows > 1) {
+                if ($getMultiTask->num_rows > 1 && $row['MULTI_TASK_ID'] != '') {
                     $durationArray = [];
                     while ($multiTaskDuration = $getMultiTask->fetch_array()) {
                         $multiStart_time = DateTime::createFromFormat('H:i:s', $multiTaskDuration['TIME_START']);
