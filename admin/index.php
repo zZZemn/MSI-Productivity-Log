@@ -13,6 +13,7 @@ include('components/header.php');
         <thead>
             <tr>
                 <th>#</th>
+                <th>User</th>
                 <th>Login ID</th>
                 <th>Multi Task ID</th>
                 <th>Group</th>
@@ -135,6 +136,7 @@ include('components/header.php');
                 <tr>
 
                     <td><?= $count ?></td>
+                    <td><?= $rows['FULL_NAME'] ?></td>
                     <td><?= $rows['LOGIN_ID'] ?></td>
                     <td><?= $rows['MULTI_TASK_ID'] ?></td>
                     <td><?= $rows['TEAM'] ?></td>
@@ -170,6 +172,7 @@ include('components/header.php');
         <tfoot>
             <tr>
                 <th>#</th>
+                <th>User</th>
                 <th>Login ID</th>
                 <th>Multi Task ID</th>
                 <th>Group</th>
