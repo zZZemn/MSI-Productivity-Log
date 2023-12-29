@@ -33,7 +33,7 @@ if (isset($_SESSION['id'])) {
     </div>
     <div class="alert alert-success">
     </div>
-    <main class="container">
+    <main class="container-fluid p-4 pt-2">
         <ul class="nav nav-tabs m-3">
             <li class="nav-item">
                 <a class="nav-link nav-home" href="index.php">Home</a>
@@ -42,4 +42,4 @@ if (isset($_SESSION['id'])) {
                 <a class="nav-link nav-logout text-danger" href="../logout.php">Logout</a>
             </li>
         </ul>
-        <div class="container">
+        <div class="container-fluid">

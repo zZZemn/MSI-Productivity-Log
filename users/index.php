@@ -7,7 +7,7 @@ include("components/header.php");
 </div>
 
 <!-- table -->
-<div class="container mt-3 table-container mb-5">
+<div class="container-fluid mt-3 table-container mb-5">
     <table id="dataTable" class="table table-striped table-bordered" style="width:100%">
         <thead>
             <tr>
@@ -28,7 +28,6 @@ include("components/header.php");
                 <th>Action</th>
             </tr>
         </thead>
-        <?= $_SESSION['login_id'] ?>
         <tbody class="tbody">
             <?php
             $sql = $db->getMyReports($user['ID']);
