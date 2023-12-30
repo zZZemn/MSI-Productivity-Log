@@ -141,17 +141,17 @@ $(document).ready(function () {
   //   end of change user status
 
   // download reports in excel
-  $("#btnDownLoadFile").click(function (e) {
-    e.preventDefault();
-    $.ajax({
-      type: "POST",
-      url: "process/download.php",
-      data: {
-        downloadExcelFile: "downloadExcelFile",
-      },
-      success: function (response) {
-        console.log(response);
-      },
-    });
-  });
+  // $("#btnDownLoadFile").click(function (e) {
+  //   e.preventDefault();
+  //   $.ajax({
+  //     type: "POST",
+  //     url: "process/download.php",
+  //     data: {
+  //       downloadExcelFile: "downloadExcelFile",
+  //     },
+  //     success: function (response) {
+  //       console.log(response);
+  //     },
+  //   });
+  // });
 });

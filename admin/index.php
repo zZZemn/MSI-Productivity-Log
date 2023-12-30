@@ -4,7 +4,7 @@ include('components/header.php');
 
 <div class="d-flex justify-content-between">
     <h5>Hello, <?= $user['FULL_NAME'] ?></h5>
-    <button type="button" id="btnDownLoadFile" class="btn btn-dark">Download</button>
+    <a href="process/download.php?download=91asdasdutas6d5as67d5asdtas65d67a5sd65as6d75as67d5a7sd76as5d" id="btnDownLoadFile" class="btn btn-dark">Download</a>
 </div>
 
 <!-- table -->
