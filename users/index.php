@@ -78,7 +78,7 @@ include("components/header.php");
                         }
                     }
 
-                    echo json_encode($durationArray);
+                    // echo json_encode($durationArray);
                     // Weigth Duration
                     $minStartTime = "24:00:00";
                     $maxStopTime = "00:00:00";
@@ -95,8 +95,8 @@ include("components/header.php");
                         }
                     }
 
-                    echo '<br>Start Min:  ' . $minStartTime;
-                    echo '<br>Stop Max:  ' . $maxStopTime;
+                    // echo '<br>Start Min:  ' . $minStartTime;
+                    // echo '<br>Stop Max:  ' . $maxStopTime;
 
                     $percentageInDecimal = $percentage / 100;
 
@@ -105,7 +105,7 @@ include("components/header.php");
 
                     $totalDurationMinMax = $maxStopTimeStamp - $minStartTimeStamp;
                     $totalDurationFormatted = gmdate("H:i:s", $totalDurationMinMax);
-                    echo '<br>Total: ' . $totalDurationFormatted;
+                    // echo '<br>Total: ' . $totalDurationFormatted;
 
                     $weightDuration =  $percentageInDecimal * $totalDurationMinMax;
                     $weightDurationFormatted = gmdate("H:i:s", $weightDuration);
