@@ -13,15 +13,19 @@ include('components/header.php');
         <thead>
             <tr>
                 <th>#</th>
+                <th>User ID</th>
                 <th>User</th>
                 <th>Login ID</th>
                 <th>Multi Task ID</th>
                 <th>Group</th>
+                <th>Shift</th>
+                <th>Date</th>
+                <th>Activity Type</th>
                 <th>Activity</th>
                 <th>Category</th>
                 <th>Sub Category</th>
                 <th>Status</th>
-                <th>Remarks</th>
+                <!-- <th>Remarks</th> -->
                 <th>Start Time</th>
                 <th>Stop Time</th>
                 <th>Duration</th>
@@ -136,15 +140,19 @@ include('components/header.php');
                 <tr>
 
                     <td><?= $count ?></td>
+                    <td><?= $rows['USER_ID'] ?></td>
                     <td><?= $rows['FULL_NAME'] ?></td>
                     <td><?= $rows['LOGIN_ID'] ?></td>
                     <td><?= $rows['MULTI_TASK_ID'] ?></td>
                     <td><?= $rows['TEAM'] ?></td>
+                    <td><?= $rows['SHIFT'] ?></td>
+                    <td><?= $rows['START_DATE'] ?></td>
+                    <td><?= $rows['TASK_TYPE'] ?></td>
                     <td><?= $rows['ACTIVITY'] ?></td>
                     <td><?= $rows['CATEGORY'] ?></td>
                     <td><?= $rows['SUB_CATEGORY'] ?></td>
                     <td><?= $rows['REPORT_STATUS'] ?></td>
-                    <td><?= $rows['REMARKS'] ?></td>
+                    <!-- <td><?= $rows['REMARKS'] ?></td> -->
                     <td><?= $start_time->format('h:i a') ?></td>
                     <td><?= ($rows['TIME_STOP'] > 1) ? $stop_time->format('h:i a') : '' ?></td>
                     <td><?= ($rows['TIME_STOP'] > 1) ? $duration->format('%H:%I:%S') : '' ?></td>
@@ -161,7 +169,7 @@ include('components/header.php');
                         ?>
                     </td>
                     <td>
-                        <?= ($rows['TIME_STOP'] < 1) ? "<button class='btnStopDuration btn btn-danger' data-id='" . $row['ID'] . "'>Stop</button>" : '' ?>
+                        <?= ($rows['TIME_STOP'] < 1) ? "<button class='btnStopDuration btn btn-danger' data-id='" . $rows['ID'] . "'>Stop</button>" : '' ?>
                     </td>
                 </tr>
             <?php
